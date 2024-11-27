@@ -4,6 +4,7 @@ import { withAccelerate } from '@prisma/extension-accelerate'
 import bcrypt from 'bcryptjs'
 import { sign } from 'hono/jwt'
 import { Environment } from '..'
+import { signinInput, signupInput } from '@nexus-agni/inklesscommon'
 
 export const userRouter = new Hono<Environment>();
 
@@ -15,13 +16,25 @@ userRouter.post('/signup', async (c) => {
     
       try {
         const body = await c.req.json()
-        const { name, email, password } = body
-        if (!name || !email || !password) {
-          c.status(400)
+        const {success, error} = signupInput.safeParse(body);
+        if (!success) {
+          // const formattedErrors = error.format();
+          // c.status(411)
+          // return c.json({
+          //   message: "Validation errors",
+          //   errors: formattedErrors
+          // })
+          const formattedErrors = error.errors.map(err => ({
+            path: err.path.join('.'),
+            message: err.message
+          }));
+          c.status(411)
           return c.json({
-            message: "All fields are required"
+            message: "Validation errors",
+            errors: formattedErrors
           })
         }
+        const { name, email, password } = body
         const existingUser = await prisma.user.findFirst({
           where: { email }
         })
@@ -53,7 +66,7 @@ userRouter.post('/signup', async (c) => {
         console.error('Error during signup:', error)
         c.status(500)
         return c.json({
-          message: "Internal Server Error",
+          message: "Error while signing up",  
           error: error instanceof Error ? error.message : String(error)
         })
       } finally {
@@ -70,14 +83,19 @@ userRouter.post('/signin', async (c) => {
     
   try {
     const body = await c.req.json()
-    const { email, password } = body
-  
-    if (!email || !password) {
-      c.status(400)
+    const {success, error} = signinInput.safeParse(body);
+    if (!success) {
+      const formattedErrors = error.errors.map(err => ({
+        path: err.path.join('.'),
+        message: err.message
+      }));
+      c.status(411)
       return c.json({
-        message: "All fields are required"
+        message: "Validation errors",
+        errors: formattedErrors
       })
     }
+    const { email, password } = body
   
     const user = await prisma.user.findFirst({
       where : {

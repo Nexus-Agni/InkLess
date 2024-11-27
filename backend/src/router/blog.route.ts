@@ -3,6 +3,7 @@ import { Environment } from "..";
 import { verify } from "hono/jwt";
 import { withAccelerate } from "@prisma/extension-accelerate";
 import { PrismaClient } from "@prisma/client/edge";
+import { createBlogInput, updateBlogInput } from "@nexus-agni/inklesscommon";
 
 export const blogRouter = new Hono<Environment>();
 
@@ -29,7 +30,7 @@ blogRouter.use('/*', async (c, next) => {
         console.error('Error during signup:', error)
         c.status(500)
         return c.json({
-          message: "Error while verifying token",
+          message: "You are not logged in",
           error: error instanceof Error ? error.message : String(error)
         })
     }
@@ -43,14 +44,19 @@ blogRouter.post('/', async (c) => {
 
     try {
         const body = await c.req.json();
-        const { title, content } = body;
-    
-        if (!title || !content) {
-            c.status(400);
-            return c.json({
-                message: "Both Title and Content are required"
-            });
+        const {success, error} = createBlogInput.safeParse(body);
+        if (!success) {
+            const formattedErrors = error.errors.map(err => ({
+                path: err.path.join('.'),
+                message: err.message
+              }));
+              c.status(411)
+              return c.json({
+                message: "Validation errors",
+                errors: formattedErrors
+              })
         }
+        const { title, content } = body;
 
         const authorId = c.get("authorId");
 
@@ -89,6 +95,18 @@ blogRouter.put('/', async (c) => {
 
     try {
         const body = await c.req.json();
+        const {success, error} = updateBlogInput.safeParse(body);
+        if (!success) {
+            const formattedErrors = error.errors.map(err => ({
+                path: err.path.join('.'),
+                message: err.message
+              }));
+              c.status(411)
+              return c.json({
+                message: "Validation errors",
+                errors: formattedErrors
+              })
+        }
         const { id,title, content} = body;
 
         if (!id) {
