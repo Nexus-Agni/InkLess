@@ -126,7 +126,8 @@ userRouter.post('/signin', async (c) => {
     c.status(200)
     return c.json({
       message : `Welcome ${user.name}, signed in successfully`,
-      jwt : token
+      jwt : token,
+      name : user.name
     })
   } catch (error) {
     console.error('Error during signup:', error)

@@ -172,7 +172,8 @@ blogRouter.get('/bulk', async (c) => {
                     select: {
                         name: true
                     }
-                }
+                },
+                
             }
         })
 
