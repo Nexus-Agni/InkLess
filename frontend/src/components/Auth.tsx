@@ -1,9 +1,10 @@
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom'
 import { SigninInput, SignupInput } from '@nexus-agni/inklesscommon';
 import { Eye, EyeOff } from 'lucide-react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { UserContext } from '../context/UserContext';
 
 export function Auth({type}: {type : "signup" | "signin"}) {
     const navigate = useNavigate();
@@ -19,6 +20,7 @@ export function Auth({type}: {type : "signup" | "signin"}) {
     })
 
     const [showPassword, setShowPassword] = useState(false);
+    const { setUsername } = useContext(UserContext);
 
     const sendRequest = async (e: any) => {
         e.preventDefault();
@@ -41,6 +43,7 @@ export function Auth({type}: {type : "signup" | "signin"}) {
             ).then((response) => {
                 const jwt = response.data.jwt;
                 localStorage.setItem("token", jwt);
+                setUsername(response.data.name);
                 navigate("/blogs");
             });
         } else {

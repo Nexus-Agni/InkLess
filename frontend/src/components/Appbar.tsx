@@ -1,11 +1,13 @@
 import { SquarePen } from "lucide-react";
 import { Avatar } from "./BlogCard";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { UserContext } from "../context/UserContext";
 
 export const Appbar = () => {
     const [isUserSignedIn, setIsUserSignedIn] = useState<boolean>(false);
+    const {username} = useContext(UserContext)
     const navigate = useNavigate();
     useEffect(() => {
         if (localStorage.getItem("token") !== null) {
@@ -29,7 +31,7 @@ export const Appbar = () => {
                 className="text-sm md:text-base bg-black rounded-lg text-white px-4 py-2 hover:scale-105 transition-all ease-in-out duration-300">
                     {isUserSignedIn ? "Sign Out" : "Sign In"}
                 </button>
-                <Avatar name="Agnibha" />
+                <Avatar name={username} />
             </div>
         </div>
     );
