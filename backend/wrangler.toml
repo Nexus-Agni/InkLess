@@ -1,0 +1,8 @@
+name = "inklessbackend"
+main = "src/index.ts"
+compatibility_date = "2024-11-25"
+
+[vars]
+DATABASE_URL="prisma://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlfa2V5IjoiN2Q1NWRmODMtMjlhNi00YmYzLWI2ODAtNDg1MzkwMzg3YTYwIiwidGVuYW50X2lkIjoiYWExMmZiYTI1ZjZhNDVlNmJhNjBjZmNjZWYzMGU1NGJjYjc5Y2VlOTIwNTE0Y2Y5YmQwMTliYzhkYmQyNjYzOCIsImludGVybmFsX3NlY3JldCI6ImVlOTY2OTI4LTYwNjktNDBkNC05MDk0LWY2YzhlZTRlY2M0MSJ9.ymfUmvorKO10uKiMopdpfIzLe3TE97zrelH0FrGNzb4"
+
+JWT_SECRET="Ashwathama-is-immortal"
