@@ -1,9 +1,12 @@
 import { ChangeEvent, useState } from 'react';
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { SigninInput, SignupInput } from '@nexus-agni/inklesscommon';
 import { Eye, EyeOff } from 'lucide-react';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 export function Auth({type}: {type : "signup" | "signin"}) {
+    const navigate = useNavigate();
     const [signUpInputs, setSignUpInputs] = useState<SignupInput>({
         name : "",
         email : "",
@@ -16,6 +19,53 @@ export function Auth({type}: {type : "signup" | "signin"}) {
     })
 
     const [showPassword, setShowPassword] = useState(false);
+
+    const sendRequest = async (e: any) => {
+        e.preventDefault();
+        if (type === "signin") {
+            toast.promise(
+                axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/user/signin`, signInInputs),
+                {
+                    pending: "Signing in...",
+                    success: "Signed in successfully!",
+                    error: {
+                        render({ data }) {
+                            // `data` is the error object
+                            if (axios.isAxiosError(data) && data.response) {
+                                return data.response.data.message;
+                            }
+                            return "An unexpected error occurred";
+                        }
+                    }
+                }
+            ).then((response) => {
+                const jwt = response.data.jwt;
+                localStorage.setItem("token", jwt);
+                navigate("/blogs");
+            });
+        } else {
+            toast.promise(
+                axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/user/signup`, signUpInputs),
+                {
+                    pending: "Signing up...",
+                    success: "Signed up successfully!",
+                    error: {
+                        render({ data }) {
+                            // `data` is the error object
+                            if (axios.isAxiosError(data) && data.response) {
+                                return data.response.data.message;
+                            }
+                            return "An unexpected error occurred";
+                        }
+                    }
+                }
+            ).then((response) => {
+                const jwt = response.data.jwt;
+                localStorage.setItem("token", jwt);
+                navigate("/blogs");
+            })
+        }
+    };
 
     return (
         <div className="flex justify-center items-center">
@@ -68,7 +118,9 @@ export function Auth({type}: {type : "signup" | "signin"}) {
                     />
                     
                     <div className="my-2">
-                        <button type="submit" className="bg-black hover:scale-105 transition-all ease-in-out duration-300 text-white font-semibold py-2 px-4 rounded-md w-full">
+                        <button type="submit"
+                        onClick={sendRequest}
+                        className="bg-black hover:scale-105 transition-all ease-in-out duration-300 text-white font-semibold py-2 px-4 rounded-md w-full">
                             {type === "signin" ? "Sign In" : "Sign Up"}
                         </button>
                     </div>
