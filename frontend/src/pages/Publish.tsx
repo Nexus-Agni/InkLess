@@ -12,15 +12,6 @@ export const Publish = () => {
     })
     const navigate = useNavigate();
 
-    // const handlePublish = async () => {
-    //     const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/blog`, blogInputs, {
-    //         headers: {
-    //             Authorization: `Bearer ${localStorage.getItem("token")}`
-    //         }
-    //     });
-    //     navigate(`/blog/${response.data.id}`);
-    // };
-
     const handlePublish = async () => {
         toast.promise(
             axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/blog`, blogInputs, {
