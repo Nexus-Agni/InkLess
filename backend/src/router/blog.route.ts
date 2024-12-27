@@ -60,17 +60,21 @@ blogRouter.post('/', async (c) => {
 
         const authorId = c.get("authorId");
 
-        await prisma.blog.create({
+        const response = await prisma.blog.create({
             data: {
                 title,
                 content,
                 authorId: authorId
+            }, 
+            select : {
+                id: true
             }
         });
 
         return c.json({
             status: 201,
-            message: "Blog created successfully"
+            message: "Blog created successfully", 
+            id : response.id
         });
     } catch (error) {
         console.error('Error creating blog:', error);

@@ -34,28 +34,11 @@ export const Avatar = ({ name }: { name: string }) => {
       const initials = names.map(name => name.charAt(0).toUpperCase()).join('');
       return initials;
     };
-  
-    const colors = [
-      '#FF5733', // Red
-      '#33FF57', // Green
-      '#3357FF', // Blue
-      '#FF33A1', // Pink
-      '#FF8C33', // Orange
-      '#8C33FF', // Purple
-      '#FFD700', // Gold
-    ];
-  
-    const getRandomColor = () => {
-      const randomIndex = Math.floor(Math.random() * colors.length);
-      return colors[randomIndex];
-    };
-  
-    const color = getRandomColor();
+
   
     return (
       <div
-        className="flex items-center justify-center w-10 h-10 rounded-full text-white font-bold"
-        style={{ backgroundColor: color }}
+        className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-500 text-white font-bold"
       >
         {getInitials(name)}
       </div>

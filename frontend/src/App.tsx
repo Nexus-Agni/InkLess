@@ -5,7 +5,7 @@ import Signin from './pages/Signin'
 import Blog from './pages/Blog'
 import { Bounce, ToastContainer } from 'react-toastify';
 import Blogs from './pages/Blogs'
-import Publish from './pages/Publish'
+import {Publish} from './pages/Publish'
 
 function App() {
   return (

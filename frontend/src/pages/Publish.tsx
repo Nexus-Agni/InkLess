@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { ChangeEvent, useState } from "react";
 import { CreateBlogInput } from "@nexus-agni/inklesscommon";
+import { toast } from "react-toastify";
 
 export const Publish = () => {
     const [blogInputs, setBlogInputs] = useState<CreateBlogInput>({
@@ -11,14 +12,38 @@ export const Publish = () => {
     })
     const navigate = useNavigate();
 
+    // const handlePublish = async () => {
+    //     const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/blog`, blogInputs, {
+    //         headers: {
+    //             Authorization: `Bearer ${localStorage.getItem("token")}`
+    //         }
+    //     });
+    //     navigate(`/blog/${response.data.id}`);
+    // };
+
     const handlePublish = async () => {
-        const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/blog`, blogInputs, {
-            headers: {
-                Authorization: localStorage.getItem("token")
+        toast.promise(
+            axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/blog`, blogInputs, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`
+                }
+            }) , {
+                pending : "Publishing post...",
+                success : "Post published successfully!",
+                error: {
+                    render({ data }) {
+                        // `data` is the error object
+                        if (axios.isAxiosError(data) && data.response) {
+                            return data.response.data.message;
+                        }
+                        return "An unexpected error occurred";
+                    }
+                }
             }
-        });
-        navigate(`/blog/${response.data.id}`);
-    };
+        ).then((response) => {
+            navigate(`/blog/${response.data.id}`);
+        })
+    }
 
     return (
         <div className="min-h-screen bg-gray-100">

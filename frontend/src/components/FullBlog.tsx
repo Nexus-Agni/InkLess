@@ -21,7 +21,7 @@ function FullBlog({blog } : {blog : Blog}) {
         </div>
 
         {/* Author Section */}
-        <div className="flex flex-col md:flex-row md:items-center md:items-start border-t md:space-x-4 pt-6">
+        <div className="flex flex-col md:flex-row md:items-center  border-t md:space-x-4 pt-6">
           {/* <div className="w-16 h-16 bg-gray-300 rounded-full mr-4 mb-4 md:mb-0"></div> */}
           <Avatar name={blog.author.name} />
           <div>
