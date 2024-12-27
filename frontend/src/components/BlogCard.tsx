@@ -1,15 +1,17 @@
 import { Dot } from "lucide-react";
+import { Link } from "react-router-dom";
 
 type BlogCardProps = {
     authorName : string,
     title : string,
     content : string,
-    publishedDate : string
+    publishedDate : string,
+    id : string
 }
 
-export function BlogCard({authorName,title, content, publishedDate} : BlogCardProps) {
+export function BlogCard({authorName,title, content, id, publishedDate} : BlogCardProps) {
   return (
-    <div className=" w-full md:max-w-2xl mx-auto space-y-4 border-b-2 border-gray-200 py-6 font-serif">
+    <Link to={`/blog/${id}`} className=" w-full md:max-w-2xl mx-auto space-y-4 border-b-2 border-gray-200 py-6 font-serif">
         <div className="flex space-x-2 items-center">
             <Avatar name={authorName}/> <span>{authorName}</span> <Dot /> <span className="text-gray-500">{publishedDate}</span> 
         </div>
@@ -20,7 +22,7 @@ export function BlogCard({authorName,title, content, publishedDate} : BlogCardPr
         <div className="text-gray-500 bg-gray-200 w-fit py-1 px-2 rounded-xl text-sm">
             {`${Math.ceil(content.length / 100)} min read`}
         </div>
-    </div>
+    </Link>
   )
 }
 
